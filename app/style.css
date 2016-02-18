@@ -1,0 +1,92 @@
+body {
+    font-family: sans-serif;
+    font-size: 17px
+}
+
+#trains table {
+    font-size: 17px
+}
+
+#navs {
+    color: blue;
+}
+
+#navs.inactive {
+    color: gray;
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr.northbound {
+    background-color: #fdd;
+}
+
+tr.southbound {
+    background-color: lightblue;
+}
+
+th {
+    border-right: 1px solid #999;
+}
+
+td {
+    border: 1px solid #999;
+}
+
+td.actual {
+    font-weight: bold;
+}
+
+td.estimated {
+    font-style: italic;
+}
+
+td.countdown {
+    text-align: right;
+}
+
+div.selected {
+    color: blue;
+}
+
+.pull-left {
+    float: left;
+    width: 50%;
+}
+
+.pull-right {
+    float: left;
+    width: 50%;
+}
+
+.pull-right > div {
+    text-align: right;
+}
+
+.narrow {
+    width: 34%;
+}
+
+.center {
+    float: left;
+    width: 32%;
+}
+
+.center > div {
+    text-align: center;
+}
+
+.wide {
+    width: 100%;
+}
+
+#trains {
+    clear: both;
+}

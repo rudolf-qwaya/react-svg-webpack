@@ -7,8 +7,8 @@ const stations = {
     nw: ['Kän', 'Khä', 'Jkb', 'Bkb', 'Spå', 'Sub'],
     ne: ['Nvk', 'Hgv', 'Sol', 'Hel', 'Udl', 'So'],
     c: ['Ke', 'Cst', 'Sst', 'Åbe', 'Äs'],
-    sw: ['Sta', 'Hu', 'Flb', 'Tul', 'Tu', 'Rön', 'Öte', 'Söd'],
-    se: ['Fas', 'Tåd', 'Skg', 'Hnd', 'Jbo', 'Vhe', 'Kda', 'Ts']
+    sw: ['Söd', 'Öte', 'Rön', 'Tu', 'Tul', 'Flb', 'Hu', 'Sta'],
+    se: ['Ts', 'Kda', 'Vhe', 'Jbo', 'Hnd', 'Skg', 'Tåd', 'Fas']
 };
 
 const Station = React.createClass({
@@ -28,10 +28,10 @@ const Station = React.createClass({
 
 const Stations = React.createClass({
     render: function () {
-        const a = stations.c;
         const p = this.props;
-        const dx = (p.x2 - p.x1) / (a.length - 1);
-        const dy = (p.y2 - p.y1) / (a.length - 1);
+        const a = p.locations;
+        const dx = (p.x2 - p.x1) / (a.length - (p.end || 0));
+        const dy = (p.y2 - p.y1) / (a.length - (p.end || 0));
 
         return <g>
             <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="12"/>
@@ -60,9 +60,16 @@ const Navs = React.createClass({
         clearInterval(this.interval)
     },
     render: function () {
+        const ke = 250;
+        const as = 450;
+
         return <svg version="1.1" baseProfile="full" width="600" height="800" xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="darkslategray"/>
-            <Stations x1={100} y1={100} x2={300} y2={700}/>
+            <Stations locations={stations.nw} x1={50} y1={50} x2={300} y2={ke}/>
+            <Stations locations={stations.ne} x1={550} y1={50} x2={300} y2={ke}/>
+            <Stations locations={stations.sw} x2={300} y2={as} x1={50} y1={750}/>
+            <Stations locations={stations.se} x2={300} y2={as} x1={550} y1={750}/>
+            <Stations locations={stations.c} end={1} x1={300} y1={ke} x2={300} y2={as}/>
         </svg>
     }
 });

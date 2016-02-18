@@ -26,6 +26,20 @@ const Station = React.createClass({
     }
 });
 
+const Stations = React.createClass({
+    render: function () {
+        const a = stations.c;
+        const p = this.props;
+        const dx = (p.x2 - p.x1) / (a.length - 1);
+        const dy = (p.y2 - p.y1) / (a.length - 1);
+
+        return <g>
+            <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="12"/>
+            {a.map((location, i) => <Station key={location} location={location} x={p.x1 + dx * i} y={p.y1 + dy * i}/>)}
+        </g>
+    }
+});
+
 const Navs = React.createClass({
     getInitialState: function () {
         return {
@@ -46,12 +60,9 @@ const Navs = React.createClass({
         clearInterval(this.interval)
     },
     render: function () {
-        const dy = 40;
-
         return <svg version="1.1" baseProfile="full" width="600" height="800" xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="darkslategray"/>
-            <line x1="300" y1={2 * dy} x2="300" y2={6 * dy} stroke="lightsteelblue" strokeWidth="12"/>
-            {stations.c.map((location, i) => <Station key={location} location={location} x="300" y={(i + 2) * dy}/>)}
+            <Stations x1={100} y1={100} x2={300} y2={700}/>
         </svg>
     }
 });

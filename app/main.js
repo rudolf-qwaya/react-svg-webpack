@@ -4,6 +4,7 @@ const request = require('then-request');
 const _ = require('lodash');
 
 require("./style.css");
+const groupByCurrentLocation = require('./groupByCurrentLocation');
 
 const stations = {
     nw: ['Kän', 'Khä', 'Jkb', 'Bkb', 'Spå', 'Sub'],
@@ -15,17 +16,17 @@ const stations = {
 
 const Station = React.createClass({
     render: function () {
-        var s = 'translate(' + this.props.x + ' ' + this.props.y + ')';
-        const current = this.props.current[this.props.location];
         var style = {
-            fontSize: current ? 10 : 12,
+            fontSize: 12,
             fontWeight: 'bold',
-            fill: current ? 'green' : 'black'
+            fill: 'black'
         };
-        return <g transform={s}>
-            <rect x="-32" y="-12" width="64" height="24" fill="yellow"/>
-            <text x="0" y="5" style={style}
-                  textAnchor="middle">{current || this.props.location}</text>
+        const current = this.props.current[this.props.location];
+        const y0 = 10 - (current ? current.length : 0) * 6;
+        return <g transform={'translate(' + this.props.x + ' ' + this.props.y + ')'}>
+            <rect x="-16" y="-12" width="32" height="24" fill="yellow"/>
+            <text x="0" y="5" style={style} textAnchor="middle">{this.props.location}</text>
+            {_.map(current, (s, i) => <text key={this.props.location + i} x="-16" y={y0 + 12 * i} fontSize="12" fill="white" textAnchor="end">{s}</text>)}
         </g>
     }
 });
@@ -84,14 +85,7 @@ const navs = ReactDOM.render(<Navs />, document.getElementById('content'));
 function handleCurrent(obj) {
     const announcements = _.first(obj.RESPONSE.RESULT).TrainAnnouncement;
     console.log(announcements.length, 'announcements');
-    const value = _(announcements)
-        .groupBy('AdvertisedTrainIdent')
-        .map((group, key) => _.sortBy(group, 'TimeAtLocation'))
-        .map(_.last)
-        .map(train => [train.LocationSignature, _.first(train.ToLocation).LocationName + train.ActivityType.substr(0, 3) + train.TimeAtLocation.substr(11, 5)])
-        .zipObject()
-        .value();
-    navs.setCurrent(value);
+    navs.setCurrent(groupByCurrentLocation(announcements));
 }
 
 require('then-request')('GET', 'api/current').done(response => handleCurrent(JSON.parse(response.body)));

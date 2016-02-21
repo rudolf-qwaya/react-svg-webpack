@@ -14,19 +14,37 @@ const stations = {
     se: ['Ts', 'Kda', 'Vhe', 'Jbo', 'Hnd', 'Skg', 'Tåd', 'Fas']
 };
 
+const TrainsAtStation = React.createClass({
+    render: function () {
+        const lineHeight = 24;
+        return <g transform={'translate(0 ' + (lineHeight / 2 - this.props.current.length * 6) + ')'}>
+            {_.map(this.props.current,
+                (train, i) =>
+                    <text key={train.AdvertisedTrainIdent}
+                          x={this.props.textAnchor === 'end' ? -16 : 16}
+                          y={lineHeight * i}
+                          fontSize={lineHeight}
+                          fill="white"
+                          textAnchor={this.props.textAnchor}>
+                        {_.first(train.ToLocation).LocationName + ' ' + train.ActivityType.substr(0, 3) + train.TimeAtLocation.substr(11, 5)}
+                    </text>)}
+        </g>
+    }
+});
+
 const Station = React.createClass({
     render: function () {
         var style = {
             fontSize: 12,
             fontWeight: 'bold',
-            fill: 'black'
+            fill: 'black',
+            textAnchor: 'middle'
         };
-        const current = this.props.current[this.props.location];
-        const y0 = 10 - (current ? current.length : 0) * 6;
         return <g transform={'translate(' + this.props.x + ' ' + this.props.y + ')'}>
             <rect x="-16" y="-12" width="32" height="24" fill="yellow"/>
-            <text x="0" y="5" style={style} textAnchor="middle">{this.props.location}</text>
-            {_.map(current, (s, i) => <text key={this.props.location + i} x="-16" y={y0 + 12 * i} fontSize="12" fill="white" textAnchor="end">{s}</text>)}
+            <text x="0" y="5" style={style}>{this.props.location}</text>
+            <TrainsAtStation current={this.props.current[this.props.location] || []}
+                             textAnchor={this.props.textAnchor}/>
         </g>
     }
 });
@@ -40,8 +58,13 @@ const Stations = React.createClass({
 
         return <g>
             <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="12"/>
-            {a.map((location, i) => <Station key={location} current={this.props.current} location={location}
-                                             x={p.x1 + dx * i} y={p.y1 + dy * i}/>)}
+            {a.map((location, i) => {
+                const x = p.x1 + dx * i;
+                const y = p.y1 + dy * i;
+                return <Station key={location} current={this.props.current}
+                                textAnchor={x < 150 || x>300 && impx<450 ? 'start' : 'end'}
+                                location={location} x={x} y={y}/>
+            })}
         </g>
     }
 });

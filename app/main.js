@@ -16,8 +16,8 @@ const stations = {
 
 const TrainsAtStation = React.createClass({
     render: function () {
-        const lineHeight = 24;
-        return <g transform={'translate(0 ' + (lineHeight / 2 - this.props.current.length * 6) + ')'}>
+        const lineHeight = 13;
+        return <g transform={'translate(0 ' + (lineHeight / 2 - this.props.current.length * 2) + ')'}>
             {_.map(this.props.current,
                 (train, i) =>
                     <text key={train.AdvertisedTrainIdent}
@@ -35,13 +35,13 @@ const TrainsAtStation = React.createClass({
 const Station = React.createClass({
     render: function () {
         var style = {
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: 'bold',
             fill: 'black',
             textAnchor: 'middle'
         };
         return <g transform={'translate(' + this.props.x + ' ' + this.props.y + ')'}>
-            <rect x="-16" y="-12" width="32" height="24" fill="yellow"/>
+            <rect x="-12" y="-8" width="24" height="16" fill="yellow"/>
             <text x="0" y="5" style={style}>{this.props.location}</text>
             <TrainsAtStation current={this.props.current[this.props.location] || []}
                              textAnchor={this.props.textAnchor}/>
@@ -57,12 +57,12 @@ const Stations = React.createClass({
         const dy = (p.y2 - p.y1) / (a.length - (p.end || 0));
 
         return <g>
-            <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="12"/>
+            <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="6"/>
             {a.map((location, i) => {
                 const x = p.x1 + dx * i;
                 const y = p.y1 + dy * i;
                 return <Station key={location} current={this.props.current}
-                                textAnchor={x < 150 || x > 300 && x < 450 ? 'start' : 'end'}
+                                textAnchor={x < p.width / 4 || x > p.width / 2 && x < 3 * p.width / 4 ? 'start' : 'end'}
                                 location={location} x={x} y={y}/>
             })}
         </g>
@@ -89,16 +89,24 @@ const Navs = React.createClass({
         clearInterval(this.interval)
     },
     render: function () {
-        const ke = 250;
-        const as = 450;
+        const w = 375 - 16;
+        const h = 627 - 16;
+        const ke = h / 3;
+        const as = 3 * h / 5;
+        const margin = w / 20;
 
-        return <svg version="1.1" baseProfile="full" width="600" height="800" xmlns="http://www.w3.org/2000/svg">
+        return <svg version="1.1" baseProfile="full" width={w} height={h} xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="darkslategray"/>
-            <Stations current={this.state.current} locations={stations.nw} x1={50} y1={50} x2={300} y2={ke}/>
-            <Stations current={this.state.current} locations={stations.ne} x1={550} y1={50} x2={300} y2={ke}/>
-            <Stations current={this.state.current} locations={stations.sw} x2={300} y2={as} x1={50} y1={750}/>
-            <Stations current={this.state.current} locations={stations.se} x2={300} y2={as} x1={550} y1={750}/>
-            <Stations current={this.state.current} locations={stations.c} end={1} x1={300} y1={ke} x2={300} y2={as}/>
+            <Stations current={this.state.current} width={w} locations={stations.nw}
+                      x1={margin} y1={margin} x2={w / 2} y2={ke}/>
+            <Stations current={this.state.current} width={w} locations={stations.ne}
+                      x1={w - margin} y1={margin} x2={w / 2} y2={ke}/>
+            <Stations current={this.state.current} width={w} locations={stations.sw}
+                      x2={w / 2} y2={as} x1={margin} y1={h - margin}/>
+            <Stations current={this.state.current} width={w} locations={stations.se}
+                      x2={w / 2} y2={as} x1={w - margin} y1={h - margin}/>
+            <Stations current={this.state.current} width={w} locations={stations.c} end={1}
+                      x1={w / 2} y1={ke} x2={w / 2} y2={as}/>
         </svg>
     }
 });

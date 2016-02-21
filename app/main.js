@@ -17,19 +17,17 @@ const stations = {
 const TrainsAtStation = React.createClass({
     render: function () {
         const lineHeight = 13;
-        const p = this.props;
-        return <g transform={'translate(0 ' + (lineHeight / 2 - p.current.length * 2) + ')'}>
-            {_.map(p.current,
-                function (train, i) {
-                    return <text key={train.AdvertisedTrainIdent}
-                                 x={p.textAnchor === 'end' ? -16 : 16}
-                                 y={lineHeight * i}
-                                 fontSize={lineHeight}
-                                 fill="white"
-                                 textAnchor={p.textAnchor}>
+        return <g transform={'translate(0 ' + (lineHeight / 2 - this.props.current.length * 2) + ')'}>
+            {_.map(this.props.current,
+                (train, i) =>
+                    <text key={train.AdvertisedTrainIdent}
+                          x={this.props.textAnchor === 'end' ? -16 : 16}
+                          y={lineHeight * i}
+                          fontSize={lineHeight}
+                          fill="white"
+                          textAnchor={this.props.textAnchor}>
                         {_.first(train.ToLocation).LocationName + ' ' + train.ActivityType.substr(0, 3) + train.TimeAtLocation.substr(11, 5)}
-                    </text>
-                })}
+                    </text>)}
         </g>
     }
 });
@@ -60,10 +58,10 @@ const Stations = React.createClass({
 
         return <g>
             <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2} stroke="lightsteelblue" strokeWidth="6"/>
-            {a.map(function (location, i) {
+            {a.map((location, i) => {
                 const x = p.x1 + dx * i;
                 const y = p.y1 + dy * i;
-                return <Station key={location} current={p.current}
+                return <Station key={location} current={this.props.current}
                                 textAnchor={x < p.width / 4 || x > p.width / 2 && x < 3 * p.width / 4 ? 'start' : 'end'}
                                 location={location} x={x} y={y}/>
             })}
@@ -121,5 +119,5 @@ function handleCurrent(obj) {
     navs.setCurrent(groupByCurrentLocation(announcements));
 }
 
-require('then-request')('GET', 'api/current').done(function (response) { handleCurrent(JSON.parse(response.body)) });
+require('then-request')('GET', 'api/current').done(response => handleCurrent(JSON.parse(response.body)));
 console.log('request sent');

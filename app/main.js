@@ -62,7 +62,7 @@ const Stations = React.createClass({
                 const x = p.x1 + dx * i;
                 const y = p.y1 + dy * i;
                 return <Station key={location} current={this.props.current}
-                                textAnchor={x < 150 || x>300 && impx<450 ? 'start' : 'end'}
+                                textAnchor={x < 150 || x > 300 && x < 450 ? 'start' : 'end'}
                                 location={location} x={x} y={y}/>
             })}
         </g>

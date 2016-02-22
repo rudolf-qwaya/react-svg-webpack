@@ -89,13 +89,13 @@ const Navs = React.createClass({
         clearInterval(this.interval)
     },
     render: function () {
-        const w = 375 - 16;
-        const h = 627 - 16;
+        const w = 450;
+        const h = 600;
         const ke = h / 3;
         const as = 3 * h / 5;
         const margin = w / 20;
 
-        return <svg version="1.1" baseProfile="full" width={w} height={h} xmlns="http://www.w3.org/2000/svg">
+        return <svg version="1.1" baseProfile="full" viewBox={[0, 0, w, h].join(' ')} xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="darkslategray"/>
             <Stations current={this.state.current} width={w} locations={stations.nw}
                       x1={margin} y1={margin} x2={w / 2} y2={ke}/>

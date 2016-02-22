@@ -42,7 +42,7 @@ const Station = React.createClass({
         };
         return <g transform={'translate(' + this.props.x + ' ' + this.props.y + ')'}>
             <rect x="-12" y="-8" width="24" height="16" fill="yellow"/>
-            <text x="0" y="5" style={style}>{this.props.location}</text>
+            <text x="0" y="4" style={style}>{this.props.location}</text>
             <TrainsAtStation current={this.props.current[this.props.location] || []}
                              textAnchor={this.props.textAnchor}/>
         </g>
@@ -62,7 +62,7 @@ const Stations = React.createClass({
                 const x = p.x1 + dx * i;
                 const y = p.y1 + dy * i;
                 return <Station key={location} current={this.props.current}
-                                textAnchor={x < p.width / 4 || x > p.width / 2 && x < 3 * p.width / 4 ? 'start' : 'end'}
+                                textAnchor={x < 120 || x > 240 && x < 360 ? 'start' : 'end'}
                                 location={location} x={x} y={y}/>
             })}
         </g>
@@ -89,24 +89,17 @@ const Navs = React.createClass({
         clearInterval(this.interval)
     },
     render: function () {
-        const w = 450;
-        const h = 600;
-        const ke = h / 3;
-        const as = 3 * h / 5;
-        const margin = w / 20;
+        const ke = 192;
+        const as = 384;
+        const margin = 24;
 
-        return <svg version="1.1" baseProfile="full" viewBox={[0, 0, w, h].join(' ')} xmlns="http://www.w3.org/2000/svg">
+        return <svg version="1.1" baseProfile="full" viewBox="0 0 480 640" xmlns="http://www.w3.org/2000/svg">
             <rect width="100%" height="100%" fill="darkslategray"/>
-            <Stations current={this.state.current} width={w} locations={stations.nw}
-                      x1={margin} y1={margin} x2={w / 2} y2={ke}/>
-            <Stations current={this.state.current} width={w} locations={stations.ne}
-                      x1={w - margin} y1={margin} x2={w / 2} y2={ke}/>
-            <Stations current={this.state.current} width={w} locations={stations.sw}
-                      x2={w / 2} y2={as} x1={margin} y1={h - margin}/>
-            <Stations current={this.state.current} width={w} locations={stations.se}
-                      x2={w / 2} y2={as} x1={w - margin} y1={h - margin}/>
-            <Stations current={this.state.current} width={w} locations={stations.c} end={1}
-                      x1={w / 2} y1={ke} x2={w / 2} y2={as}/>
+            <Stations current={this.state.current} locations={stations.nw} x1={margin} y1={margin} x2={240} y2={ke}/>
+            <Stations current={this.state.current} locations={stations.ne} x1={480 - margin} y1={margin} x2={240} y2={ke}/>
+            <Stations current={this.state.current} locations={stations.sw} x2={240} y2={as} x1={margin} y1={640 - margin}/>
+            <Stations current={this.state.current} locations={stations.se} x2={240} y2={as} x1={480 - margin} y1={640 - margin}/>
+            <Stations current={this.state.current} locations={stations.c} end={1} x1={240} y1={ke} x2={240} y2={as}/>
         </svg>
     }
 });
